@@ -19,6 +19,11 @@ Run the setup script with the following command:
 
 	./setup.sh
 
+NOTE: This is specifically for a Mac. Setup scripts for Linux/Windows will be written on request.
+NOTE: If this doesn't work please add the following directly to your .zshrc file
+
+	alias showme='dt=$(pwd); {full path to this folder}; node ShowMe.js -folderPath $dt; cd $dt;'
+
 ## How To Use
 
 Create a file called show.me and populate it with links, or sections of links, as shown below:
