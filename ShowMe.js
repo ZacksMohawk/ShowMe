@@ -4,7 +4,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 const Logger = require('./includes/Logger');
 
-let version = "1.0.0";
+let version = "1.0.1";
 let pathDivider = process.platform === "win32" ? '\\' : '/';
 
 Logger.log('');
@@ -91,7 +91,8 @@ function showMe(folderPath){
 			let title = sectionTitles[index];
 			Logger.log((index + 1) + '. ' + title);
 		}
-		let sectionChoice = prompt('\nChoose (1-' + sectionTitles.length + '): ');
+		Logger.log('');
+		let sectionChoice = prompt('Choose (1-' + sectionTitles.length + '): ');
 		if (!sectionChoice){
 			process.exit(0);
 		}
