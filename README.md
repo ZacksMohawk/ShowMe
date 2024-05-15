@@ -15,14 +15,15 @@ No configuration required.
 
 ## Setup Alias
 
-Run the setup script with the following command:
+Run the setup script for Mac with the following command:
 
-	./setup.sh
+	./setup_mac.sh
 
-NOTE: This is specifically for a Mac. Setup scripts for Linux/Windows will be written on request.
-NOTE: If this doesn't work please add the following directly to your .zshrc file
+Run the setup script for Linux/Ubuntu with the following command:
 
-	alias showme='dt=$(pwd); {full path to this folder}; node ShowMe.js -folderPath $dt; cd $dt;'
+	./setup_linux.sh
+
+NOTE: Windows setup script will be added in future.
 
 ## How To Use
 
