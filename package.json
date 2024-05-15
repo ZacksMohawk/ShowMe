@@ -4,7 +4,7 @@
   },
   "name": "showme",
   "description": "## Overview",
-  "version": "1.0.1",
+  "version": "1.2.0",
   "main": "ShowMe.js",
   "devDependencies": {},
   "scripts": {

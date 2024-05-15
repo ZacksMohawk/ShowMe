@@ -4,7 +4,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 const Logger = require('./includes/Logger');
 
-let version = "1.1.0";
+let version = "1.2.0";
 let pathDivider = process.platform === "win32" ? '\\' : '/';
 let linuxType = null;
 if (process.platform === 'linux'){
@@ -56,9 +56,13 @@ else {
 	process.exit(0);
 }
 
-function showMe(folderPath){
-	let showMeFilePath = folderPath + pathDivider + 'show.me';
+function showMe(showMeFilePath, firstAttempt){;
 	if (!fs.existsSync(showMeFilePath)){
+		if (firstAttempt){
+			Logger.log("No show.me file present in current folder. Trying user home directory...\n");
+			showMe(getUserHome() + pathDivider + 'show.me', false);
+			return;
+		}
 		Logger.log("No show.me file present");
 		Logger.log("Exiting");
 		process.exit(0);
@@ -141,9 +145,13 @@ function showMe(folderPath){
 	}
 }
 
+function getUserHome(){
+	return process.env.HOME || process.env.USERPROFILE;
+}
+
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
     return target.replace(new RegExp(search, 'g'), replacement);
 };
 
-showMe(folderPath);
+showMe(folderPath + pathDivider + 'show.me', true);
