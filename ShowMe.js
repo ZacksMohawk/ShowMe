@@ -4,8 +4,39 @@ const path = require('path');
 const { execSync } = require('child_process');
 const Logger = require('./includes/Logger');
 
-let version = "1.0.1";
+let version = "1.1.0";
 let pathDivider = process.platform === "win32" ? '\\' : '/';
+let linuxType = null;
+if (process.platform === 'linux'){
+	let linuxTypeFilePath = 'linux.type';
+	if (!fs.existsSync(linuxTypeFilePath)){
+		let windowsAnswer = prompt('Are you running Linux/Ubuntu via Windows (y/n)?: ').toLowerCase();
+		if (windowsAnswer == 'y'){
+			linuxType = 'windows';
+		}
+		else if (windowsAnswer == 'n'){
+			linuxType = 'linux';
+		}
+		else {
+			Logger.log("Invalid answer. Setup not complete.");
+			Logger.log("Exiting");
+			process.exit(0);
+		}
+		fs.writeFileSync(linuxTypeFilePath, linuxType);
+	}
+	if (!fs.existsSync(linuxTypeFilePath)){
+		Logger.log("Missing config file");
+		Logger.log("Exiting");
+		process.exit(0);
+	}
+
+	linuxType = fs.readFileSync(linuxTypeFilePath, 'utf8');
+}
+let openCommand =  process.platform === 'win32' ? 'start '
+	: process.platform === 'linux' && linuxType == 'linux' ? 'xdg-open '
+	: process.platform === 'linux' && linuxType == 'windows' ? 'cmd.exe /C start '
+	: 'open ';
+let ampersand = process.platform === 'linux' && linuxType == 'windows' ? '^&' : '&';
 
 Logger.log('');
 Logger.log(fs.readFileSync('AppLogo.txt', 'utf8'));
@@ -106,8 +137,13 @@ function showMe(folderPath){
 
 	for (let index = 0; index < chosenLinkSection.length; index++){
 		let link = chosenLinkSection[index];
-		execSync('open -a "Google Chrome" ' + link);
+		execSync(openCommand + '"' + link.replaceAll('&', ampersand) + '"');
 	}
 }
+
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+};
 
 showMe(folderPath);
