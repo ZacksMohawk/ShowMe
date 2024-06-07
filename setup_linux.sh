@@ -36,7 +36,7 @@ if [[ "$EDITSHOWMESET" != true ]]; then
 		NEWLINESET=true
 	fi
 	echo "Setting 'editshowme' alias";
-echo "alias editshowme='touch ~/show.me; open ~/show.me'" >> ~/.bashrc
+echo "alias editshowme='touch ~/show.me; vi ~/show.me'" >> ~/.bashrc
 fi
 
 source ~/.bashrc
