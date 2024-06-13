@@ -48,7 +48,7 @@ To implement a sub-section of choices, use the following format (single tab inde
 		https://link7.com
 		https://link8.com
 
-Type 'showme' into your terminal and the application will attempt to open any links found in the show.me file at that level
+Type 'showme' into your terminal and the application will attempt to open any links found in the show.me file at that level (if no local show.me file is found, the application will attempt to find and open a show.me file in your user home folder)
 
 	showme
 
