@@ -4,7 +4,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 const Logger = require('./includes/Logger');
 
-let version = "1.2.0";
+let version = "1.3.0";
 let pathDivider = process.platform === "win32" ? '\\' : '/';
 let linuxType = null;
 if (process.platform === 'linux'){
@@ -73,6 +73,9 @@ function showMe(showMeFilePath, firstAttempt){;
 	let linkSection = [];
 	let sectionTitles = [];
 	let sectionTitle = '';
+	let subSectionOpen = false;
+	let subLinkSection = [];
+
 	for (let index = 0; index < showMeLinks.length; index++){
 		let line = showMeLinks[index];
 		if (!line || line.startsWith("//")){
@@ -97,8 +100,29 @@ function showMe(showMeFilePath, firstAttempt){;
 			}
 			continue;
 		}
+		else if (line.startsWith('	[')){
+			subSectionOpen = true;
+
+			let subSectionTitle = line.substr(line.indexOf('[') + 1, line.length);
+			subSectionTitle = subSectionTitle.substr(0, subSectionTitle.indexOf(']'));
+			subLinkSection = [subSectionTitle];
+			linkSection.push(subLinkSection);
+
+			continue;
+		}
+		if (subSectionOpen){
+			if (!line.startsWith('	')){
+				// close off sub-section if indentation has returned to normal
+				subSectionOpen = false;
+				subLinkSection = [];
+				continue;
+			}
+			subLinkSection.push(line.replaceAll('\t', ''));
+			continue;
+		}
 		linkSection.push(line);
 	}
+
 	if (linkSection.length > 0){
 		linkSections.push(linkSection);
 
@@ -120,14 +144,15 @@ function showMe(showMeFilePath, firstAttempt){;
 	}
 
 	let chosenLinkSection = linkSections[0];
+	let sectionChoice;
 	if (linkSections.length > 1){
 		Logger.log('Multiple Options\n');
 		for (let index = 0; index < sectionTitles.length; index++){
 			let title = sectionTitles[index];
-			Logger.log((index + 1) + '. ' + title);
+			Logger.log('\t' + (index + 1) + '. ' + title);
 		}
 		Logger.log('');
-		let sectionChoice = prompt('Choose (1-' + sectionTitles.length + '): ');
+		sectionChoice = prompt('Choose (1-' + sectionTitles.length + '): ');
 		if (!sectionChoice){
 			process.exit(0);
 		}
@@ -140,6 +165,37 @@ function showMe(showMeFilePath, firstAttempt){;
 	}
 
 	for (let index = 0; index < chosenLinkSection.length; index++){
+		let link = chosenLinkSection[index];
+		if (Array.isArray(link)){
+			displaySubSectionChoice(chosenLinkSection, sectionTitles[sectionChoice - 1]);
+			break;
+		}
+		execSync(openCommand + '"' + link.replaceAll('&', ampersand) + '"');
+	}
+}
+
+function displaySubSectionChoice(subSectionArray, subSectionTitle){
+	Logger.log('');
+	Logger.log(subSectionTitle);
+	Logger.log('');
+	for (let index = 0; index < subSectionArray.length; index++){
+		let subSection = subSectionArray[index];
+		let title = subSection[0];
+		Logger.log('\t' + (index + 1) + '. ' + title);
+	}
+	Logger.log('');
+	let subSectionChoice = prompt('Choose (1-' + subSectionArray.length + '): ');
+	if (!subSectionChoice){
+		process.exit(0);
+	}
+	subSectionChoice = subSectionChoice.trim();
+	if (subSectionChoice < 1 || subSectionChoice > subSectionArray.length){
+		Logger.log("Invalid choice. Aborting");
+		process.exit(0);
+	}
+	let chosenLinkSection = subSectionArray[subSectionChoice -1];
+
+	for (let index = 1; index < chosenLinkSection.length; index++){
 		let link = chosenLinkSection[index];
 		execSync(openCommand + '"' + link.replaceAll('&', ampersand) + '"');
 	}

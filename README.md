@@ -39,8 +39,17 @@ Create a file called show.me and populate it with links, or sections of links, a
 	https://link4.com
 	https://link5.com
 
+To implement a sub-section of choices, use the following format (single tab indentation):
+
+	[section 3]
+		[sub-section 3a]
+		https://link6.com
+		[sub-section 3b]
+		https://link7.com
+		https://link8.com
+
 Type 'showme' into your terminal and the application will attempt to open any links found in the show.me file at that level
 
 	showme
 
-In the above example, you will be presented with a further choice of which section to open. If no sections are present, or there is only a single headed section, the application will just open all links in the file
+In the above examples, you will be presented with a further choice of which section to open. If no sections are present, or there is only a single headed section, the application will just open all links in the file
