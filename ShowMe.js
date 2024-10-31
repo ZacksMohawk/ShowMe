@@ -4,7 +4,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 const Logger = require('./includes/Logger');
 
-let version = "1.3.0";
+let version = "1.3.1";
 let pathDivider = process.platform === "win32" ? '\\' : '/';
 let linuxType = null;
 if (process.platform === 'linux'){
@@ -82,6 +82,7 @@ function showMe(showMeFilePath, firstAttempt){;
 			continue;
 		}
 		if (line.startsWith('[')){
+			subSectionOpen = false;
 			if (linkSection.length > 0){
 				linkSections.push(linkSection);
 
